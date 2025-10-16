@@ -15,8 +15,17 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom --watchAll=false",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom --watchAll=false --testResultsProcessor='jest-allure'",
+    "eject": "react-scripts eject",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      "jest-allure"
+    ],
+    "testRunner": "jest-jasmine2"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "allure-commandline": "^2.34.1",
+    "jest-allure": "^0.1.3"
   }
 }
