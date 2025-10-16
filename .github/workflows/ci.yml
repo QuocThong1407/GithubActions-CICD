@@ -23,11 +23,11 @@ jobs:
     steps:
       # Bước 1: Checkout code từ repository về máy ảo
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Bước 2: Cài đặt Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '18' # Sử dụng Node.js phiên bản 18
 
@@ -35,27 +35,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Bước 4: Cài đặt jest-jasmine2
-      - name: Install jest-jasmine2
-        run: npm install --save-dev jest-jasmine2
-        
-      # Bước 5: Chạy test với biến môi trường CI=true
+      # Bước 4: Chạy test với biến môi trường CI=true
       - name: Run tests
         run: CI=true npm test
         # Nếu test thất bại, vẫn tiếp tục để có thể tạo báo cáo lỗi
         continue-on-error: true 
 
-      # Bước 6: (Mới) Kiểm tra xem thư mục allure-results có được tạo ra không
+      # Bước 5: Kiểm tra xem thư mục allure-results có được tạo ra không
       - name: Verify Allure results directory
         run: ls -R
 
-      # Bước 7: Lưu trữ kết quả test (thư mục allure-results) để job sau sử dụng
+      # Bước 6: Lưu trữ kết quả test (thư mục allure-results) để job sau sử dụng
       - name: Upload Allure results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: allure-results
           path: allure-results
-          retention-days: 1 # Lưu trữ trong 1 ngày
+          retention-days: 1
 
   # Job thứ hai: Tạo và triển khai báo cáo
   generate-report:
@@ -65,7 +61,7 @@ jobs:
     steps:
       # Bước 1: Download kết quả test đã được lưu trữ từ job 'test'
       - name: Download Allure results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: allure-results
           path: allure-results
@@ -74,17 +70,18 @@ jobs:
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.7
         with:
-          results_path: allure-results
-          report_path: allure-report
+          # THAY ĐỔI: Sử dụng tên tham số đầu vào chính xác
+          allure_results: allure-results
+          allure_report: allure-report
 
       # Bước 3: Tải lên báo cáo dưới dạng artifact của GitHub Pages
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
           path: allure-report
 
       # Bước 4: Triển khai báo cáo lên GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
 
