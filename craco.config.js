@@ -1,12 +1,19 @@
 module.exports = {
   jest: {
-    configure: {
-      reporters: [
+    configure: (jestConfig) => {
+      jestConfig.reporters = [
         'default',
-        'jest-allure'
-      ],
-      testRunner: 'jest-jasmine2',
-      setupFilesAfterEnv: ['<rootDir>/src/allure-setup.js']
+        ['jest-allure', {
+          resultsDir: 'allure-results'
+        }]
+      ];
+      jestConfig.testRunner = 'jest-jasmine2';
+      jestConfig.setupFilesAfterEnv = [
+        '<rootDir>/src/setupTests.js',
+        'jest-allure/dist/setup'
+      ];
+
+      return jestConfig;
     }
   }
 };
