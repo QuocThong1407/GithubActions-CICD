@@ -75,6 +75,35 @@ describe('Kiểm thử Component Đăng nhập (Login)', () => {
     reporter.endStep();
   });
 
+  test('Kiểm tra render', () => {
+    render(<Login onLoginSuccess={mockLoginSuccess} />);
+    // 1. Kiểm tra tiêu đề "Login"
+    expect(screen.getByRole('heading', { name: /Login/i })).toBeInTheDocument();
+
+    // 2. Kiểm tra ô input Email (tìm bằng label)
+    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    
+    // 3. Kiểm tra ô input Mật khẩu (tìm bằng label)
+    expect(screen.getByLabelText(/Mật khẩu/i)).toBeInTheDocument();
+
+    // 4. Kiểm tra phần Xác minh (Captcha)
+    expect(screen.getByLabelText(/Xác minh/i)).toBeInTheDocument();
+
+    // 5. Kiểm tra câu hỏi Captcha 
+    expect(screen.getByText(/=/i)).toBeInTheDocument();
+
+    // 6. Kiểm tra ô nhập câu trả lời Captcha (có vai trò 'spinbutton' vì type="number")
+    expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+
+    // 7. Kiểm tra nút "Đăng nhập"
+    expect(screen.getByRole('button', { name: /Đăng nhập/i })).toBeInTheDocument();
+
+    // 8. Kiểm tra đảm bảo không có thông báo lỗi nào được hiển thị ban đầu
+    expect(screen.queryByText(/vui lòng nhập đầy đủ thông tin/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/email hoặc mật khẩu không đúng/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/kết quả xác minh không chính xác/i)).not.toBeInTheDocument();
+  });
+
   test('Đăng nhập thất bại do sai mật khẩu', async () => {
     reporter.description(`
       Kịch bản này kiểm tra luồng đăng nhập thất bại do sai mật khẩu:
