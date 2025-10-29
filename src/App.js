@@ -16,6 +16,7 @@ function App() {
           <Login onLoginSuccess={handleLoginSuccess} /> 
         ) : (
           <>
+            <h2>Math Operation</h2>
             <MathOperations />
           </>
         )}
